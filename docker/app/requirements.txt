@@ -1,0 +1,4 @@
+isodate
+lxml
+minio
+typer
