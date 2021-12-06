@@ -138,9 +138,12 @@ def interval_callback(value: str):
 
 @app.command()
 def main(
-    name: str,
+    name: str = typer.Argument(
+        ...,
+        help="Name of mp4 and isml files to create",
+    ),
     start_time: datetime = typer.Option(
-        datetime.now(tz=tzinfo.UTC) - timedelta(minutes=15),
+        datetime.now(tz=tzinfo.UTC).replace(minute=0, second=0, microsecond=0),
         help="Start time of the event, defaults to start of current hour.",
         formats=["%Y-%m-%dT%H:%M:%S%z"],
     ),
@@ -164,6 +167,7 @@ def main(
         callback=interval_callback,
     ),
     archive_channel: str = typer.Option(..., help="Archive channel name"),
+    delay: int = typer.Option(600, help="Delay behind 'live edge'."),
 ):
 
     mc = Minio(
@@ -185,7 +189,7 @@ def main(
         "--vod2live",
         "--vod2live_start_time",
         (start_time + archive_interval * 2).isoformat().replace("+00:00", "Z"),
-        "--time_shift=600",
+        f"--time_shift={delay}",
         s3_auth,
     ]
 
@@ -218,7 +222,7 @@ def main(
                     Video(src=f"http://{s3_endpoint}/{s3_bucket}/{i['path']}")
                 )
 
-            period = f"{chunks[0]['start']}--{chunks[-1]['end']}"
+            period = f"{name}-{chunks[0]['start']}--{chunks[-1]['end']}"
 
             remix(smil, period, s3_auth)
 
