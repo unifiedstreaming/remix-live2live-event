@@ -1,8 +1,8 @@
 # remix-live2live-event
-POC for delayed live2live event using Remix nPVR & VOD2Live to create a virtual
+POC for delayed live2live event using Remix nPVR & VOD2Live to create a virtual/synthetic
 channel from a live source.
 
-This requires a source Remix nPVR setup which archives a channel to an S3
+This requires a source Remix nPVR setup which archives a channel to storage in this case an S3
 bucket, a demo is available at
 [unifiedstreaming/npvr](https://github.com/unifiedstreaming/npvr).
 
@@ -36,7 +36,7 @@ player of choice:
 ![HLS stream playing in Safari](hls_player.png)
 
 
-If your nPVR archive is using different configuration, make sure to set things
+If your nPVR archive is using a different configuration, make sure to set things
 appropriately both in the environment variables of the Origin Docker container
 and the arguments to the event script.
 
